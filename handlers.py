@@ -68,6 +68,12 @@ def get_photo(update, context):
             """,
     )
     photo_file = update.message.photo[-1].get_file()
+    context.bot.send_message(
+        chat_id=TELEGRAM_SUPPORT_CHAT_ID,
+        text=f"""
+            ФотоФайл: {photo_file}
+            """,
+    )
     photo_file.download('user_photo.jpg')
    
 
