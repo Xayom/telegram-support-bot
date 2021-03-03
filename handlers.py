@@ -61,7 +61,7 @@ def get_photo(update, context):
 
 def setup_dispatcher(dp):
     dp.add_handler(CommandHandler('start', start))
-    dp.add_handler(MessageHandler(Filters.photo & Filters.document, get_photo))
+    dp.add_handler(MessageHandler(Filters.photo & Filters.document.category("image"), get_photo))
 #     dp.add_handler(MessageHandler(Filters.chat_type.private, forward_to_chat))
 #     dp.add_handler(MessageHandler(Filters.chat(TELEGRAM_SUPPORT_CHAT_ID) & Filters.reply, forward_to_user))
     return dp
