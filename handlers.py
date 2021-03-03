@@ -3,6 +3,9 @@ from telegram.ext import CommandHandler, MessageHandler, Filters
 
 from settings import WELCOME_MESSAGE, TELEGRAM_SUPPORT_CHAT_ID
 
+title = None
+image = None
+
 def start(update, context):
     update.message.reply_text(WELCOME_MESSAGE)
 
@@ -52,9 +55,15 @@ def forward_to_user(update, context):
     )
     
 def get_photo(update, context):
+    path = update.message.photo[-1].file_path
+    photo_file = update.message.photo[-1].get_file()
+    photo_file.download('user_photo.jpg')
     context.bot.send_message(
         chat_id=TELEGRAM_SUPPORT_CHAT_ID,
-        text="Это фото",
+        text=f"""
+            Это фото адрес: {path}
+            message: {update.message.to_dict()}
+            """,
     )
 
 
