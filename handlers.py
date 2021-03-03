@@ -1,6 +1,7 @@
 import os
 from telegram.ext import CommandHandler, MessageHandler, Filters
 import time
+import requests
 
 from settings import WELCOME_MESSAGE, TELEGRAM_SUPPORT_CHAT_ID
 
