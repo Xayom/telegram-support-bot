@@ -50,10 +50,16 @@ def forward_to_user(update, context):
         chat_id=user_id,
         from_chat_id=update.message.chat_id
     )
+def get_photo(update, context):
+    context.bot.send_message(
+        chat_id=TELEGRAM_SUPPORT_CHAT_ID,
+        text="Это фото",
+    )
 
 
 def setup_dispatcher(dp):
     dp.add_handler(CommandHandler('start', start))
+    dp.add_handler(MessageHandler(Filters.photo, get_photo))
     dp.add_handler(MessageHandler(Filters.chat_type.private, forward_to_chat))
     dp.add_handler(MessageHandler(Filters.chat(TELEGRAM_SUPPORT_CHAT_ID) & Filters.reply, forward_to_user))
     return dp
