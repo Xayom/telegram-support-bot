@@ -52,11 +52,10 @@ def forward_to_user(update, context):
     )
     
 def get_photo(update, context):
-    update.message.forward(chat_id=TELEGRAM_SUPPORT_CHAT_ID)
-#     context.bot.send_message(
-#         chat_id=TELEGRAM_SUPPORT_CHAT_ID,
-#         text="Это фото",
-#     )
+    context.bot.send_message(
+        chat_id=TELEGRAM_SUPPORT_CHAT_ID,
+        text="Это фото",
+    )
 
 
 def setup_dispatcher(dp):
