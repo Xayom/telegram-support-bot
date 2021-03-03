@@ -1,5 +1,6 @@
 import os
 from telegram.ext import CommandHandler, MessageHandler, Filters
+import time
 
 from settings import WELCOME_MESSAGE, TELEGRAM_SUPPORT_CHAT_ID
 
@@ -17,7 +18,6 @@ def start(update, context):
 # 📞 Connected {user_info}.
 #         """,
 #     )
-
 
 def forward_to_chat(update, context):
     """{ 
@@ -53,14 +53,35 @@ def forward_to_user(update, context):
         chat_id=user_id,
         from_chat_id=update.message.chat_id
     )
-    
-def get_photo(update, context):
+
+def post_data(context):
     context.bot.send_message(
         chat_id=TELEGRAM_SUPPORT_CHAT_ID,
-        text=f"""
-            Это фото
-            """,
+        text='Post data',
     )
+    url = 'http://gamer.pythonanywhere.com/api/v1/posts/'
+    myobj = {'description': title, 'img_url': image}
+
+    x = requests.post(url, data = myobj)
+    context.bot.send_message(
+        chat_id=TELEGRAM_SUPPORT_CHAT_ID,
+        text='http://gamer.pythonanywhere.com/media/out.png?{}'.format(time.time() * 1000),
+    )
+    title = image = None
+    
+
+def get_title(update, context):
+    global title
+    context.bot.send_message(
+        chat_id=TELEGRAM_SUPPORT_CHAT_ID,
+        text='get title',
+    )
+    title = update.message.text
+    if image:
+        post_data(context)
+
+def get_photo(update, context):
+    global image
     context.bot.send_message(
         chat_id=TELEGRAM_SUPPORT_CHAT_ID,
         text=f"""
@@ -68,29 +89,15 @@ def get_photo(update, context):
             """,
     )
     file_info = context.bot.get_file(update.message.photo[-1].file_id)
-    context.bot.send_message(
-        chat_id=TELEGRAM_SUPPORT_CHAT_ID,
-        text=f"""
-            файлинфо: {file_info.to_dict()}
-            """,
-    )
-    downloaded_file = context.file.download('user_photo.jpg')
-    
-    
-    photo_file = update.message.photo[-1].get_file()
-    context.bot.send_message(
-        chat_id=TELEGRAM_SUPPORT_CHAT_ID,
-        text=f"""
-            ФотоФайл: {photo_file.to_dict()}
-            """,
-    )
-    photo_file.download('user_photo.jpg')
-   
+    image = file_info.file_path
+    if title:
+        post_data(context)
 
 
 def setup_dispatcher(dp):
     dp.add_handler(CommandHandler('start', start))
     dp.add_handler(MessageHandler(Filters.photo | Filters.document.category("image"), get_photo))
+    dp.add_handler(MessageHandler(Filters.text, get_title))
 #     dp.add_handler(MessageHandler(Filters.chat_type.private, forward_to_chat))
 #     dp.add_handler(MessageHandler(Filters.chat(TELEGRAM_SUPPORT_CHAT_ID) & Filters.reply, forward_to_user))
     return dp
