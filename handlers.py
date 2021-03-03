@@ -55,6 +55,7 @@ def forward_to_user(update, context):
     )
 
 def post_data(context):
+    global title, image
     context.bot.send_message(
         chat_id=TELEGRAM_SUPPORT_CHAT_ID,
         text='Post data',
