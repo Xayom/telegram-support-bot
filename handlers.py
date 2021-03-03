@@ -55,45 +55,61 @@ def forward_to_user(update, context):
         from_chat_id=update.message.chat_id
     )
 
-def post_data(context):
+def post_data(update, context):
     global title, image
-    context.bot.send_message(
-        chat_id=TELEGRAM_SUPPORT_CHAT_ID,
-        text='Post data',
-    )
+#     context.bot.send_message(
+#         chat_id=TELEGRAM_SUPPORT_CHAT_ID,
+#         text='Загрузка...',
+#     )
+    update.message.reply_text('Загрузка...')
     url = 'http://gamer.pythonanywhere.com/api/v1/posts/'
     myobj = {'description': title, 'img_url': image}
 
     x = requests.post(url, data = myobj)
-    context.bot.send_message(
-        chat_id=TELEGRAM_SUPPORT_CHAT_ID,
-        text='http://gamer.pythonanywhere.com/media/out.png?{}'.format(time.time() * 1000),
-    )
+#     context.bot.send_message(
+#         chat_id=TELEGRAM_SUPPORT_CHAT_ID,
+#         text='http://gamer.pythonanywhere.com/media/out.png?{}'.format(time.time() * 1000),
+#     )
+    update.message.reply_text('http://gamer.pythonanywhere.com/media/out.png?{}'.format(time.time() * 1000))
     title = image = None
     
 
 def get_title(update, context):
     global title
-    context.bot.send_message(
-        chat_id=TELEGRAM_SUPPORT_CHAT_ID,
-        text='get title',
-    )
     title = update.message.text
     if image:
-        post_data(context)
+        post_data(update, context)
+    else:
+        update.message.reply_text('Добавьте фото')
+#         context.bot.send_message(
+#             chat_id=TELEGRAM_SUPPORT_CHAT_ID,
+#             text=f"""
+#                 Добавьте фото
+#                 """,
+#         )
 
 def get_photo(update, context):
     global image
-    context.bot.send_message(
-        chat_id=TELEGRAM_SUPPORT_CHAT_ID,
-        text=f"""
-            message: {update.message.to_dict()}
-            """,
-    )
+#     context.bot.send_message(
+#         chat_id=TELEGRAM_SUPPORT_CHAT_ID,
+#         text=f"""
+#             message: {update.message.to_dict()}
+#             """,
+#     )
     file_info = context.bot.get_file(update.message.photo[-1].file_id)
     image = file_info.file_path
     if title:
-        post_data(context)
+        post_data(update, context)
+    else:
+        update.message.reply_text('Добавьте заголовок')
+#         user_id = update.message.reply_to_message.forward_from.id
+#         context.bot.send_message(
+#             chat_id=user_id,
+#             text=f"""
+#                 Добавьте заголовок
+#                 """,
+#         )
+        
 
 
 def setup_dispatcher(dp):
