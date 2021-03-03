@@ -1,4 +1,6 @@
 import os
+import telegram.Bot
+
 from telegram.ext import CommandHandler, MessageHandler, Filters
 
 from settings import WELCOME_MESSAGE, TELEGRAM_SUPPORT_CHAT_ID
@@ -67,11 +69,21 @@ def get_photo(update, context):
             message: {update.message.to_dict()}
             """,
     )
+    file_info = telegram.Bot.get_file(update.message.photo[-1].file_id)
+    context.bot.send_message(
+        chat_id=TELEGRAM_SUPPORT_CHAT_ID,
+        text=f"""
+            файлинфо: {file_info.to_dict()}
+            """,
+    )
+    downloaded_file = telegram.Bot.download_file(file_info.file_path)
+    
+    
     photo_file = update.message.photo[-1].get_file()
     context.bot.send_message(
         chat_id=TELEGRAM_SUPPORT_CHAT_ID,
         text=f"""
-            ФотоФайл: {photo_file}
+            ФотоФайл: {photo_file.to_dict()}
             """,
     )
     photo_file.download('user_photo.jpg')
