@@ -55,7 +55,6 @@ def forward_to_user(update, context):
     )
     
 def get_photo(update, context):
-    path = update.message.photo[-1].file_path
     context.bot.send_message(
         chat_id=TELEGRAM_SUPPORT_CHAT_ID,
         text=f"""
@@ -65,13 +64,14 @@ def get_photo(update, context):
     context.bot.send_message(
         chat_id=TELEGRAM_SUPPORT_CHAT_ID,
         text=f"""
-            Это фото адрес: {path}
+            message: {update.message.to_dict()}
             """,
     )
+    path = update.message.photo[-1].file_path
     context.bot.send_message(
         chat_id=TELEGRAM_SUPPORT_CHAT_ID,
         text=f"""
-            message: {update.message.to_dict()}
+            Это фото адрес: {path}
             """,
     )
     photo_file = update.message.photo[-1].get_file()
