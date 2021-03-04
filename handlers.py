@@ -76,6 +76,10 @@ def post_data(update, context):
 
 def get_title(update, context):
     global title
+    user_id = update.message.from_user.id
+    if user_id != TELEGRAM_SUPPORT_CHAT_ID and user_id != 425211714:
+        return False
+    
     title = update.message.text
     if image:
         post_data(update, context)
@@ -90,6 +94,10 @@ def get_title(update, context):
 
 def get_photo(update, context):
     global image
+    user_id = update.message.from_user.id
+    if user_id != TELEGRAM_SUPPORT_CHAT_ID and user_id != 425211714:
+        return False
+    
 #     context.bot.send_message(
 #         chat_id=TELEGRAM_SUPPORT_CHAT_ID,
 #         text=f"""
